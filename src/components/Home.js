@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import jwt_decode from "jwt-decode";
 import { useHistory } from 'react-router-dom';
-import { CardActionArea ,Grid} from '@mui/material';
+import { CardActionArea, Grid } from '@mui/material';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
@@ -15,12 +15,19 @@ const Home = () => {
     const [expire, setExpire] = useState('');
     const [users, setUsers] = useState([]);
     const history = useHistory();
-    const [product,setProduct] = useState([]);
+    const [product, setProduct] = useState([]);
+    const [isProductLoading, setProductLoading] = useState(true);
+    const [listProvinsi, setListProvinsi] = useState([]);
+    const [provinsiIdSelected, setProvinsiIdSelected] = useState(null)
+    const [listKota, setListKota] = useState([]);
+    const [kotaIdSelected, setKotaIdSelected] = useState(null)
+    const [searchProduct, setSearchProduct] = useState("")
 
     useEffect(() => {
         refreshToken();
         getUsers();
         getProduct();
+        getListProvinsi()
     }, []);
 
     const refreshToken = async () => {
@@ -63,33 +70,102 @@ const Home = () => {
         setUsers(response.data);
     }
 
-    const getProduct = async() =>{
-        var dataProduct = [{'nama' : 'beras a',
-                            'imgUrl' :'aa',
-                            'harga' : '60,000',
-                            'namaToko' : 'Toko Budi',
-                            'alamat' :'Jl Merdeka'
-                            },
-                            {
-                            'nama' : 'beras b',
-                            'harga' : '59,500',
-                            'imgUrl' :'https://s2.bukalapak.com/product-description-image/11197/large/beras%20premium%20SR%205%20kg.png',
-                            'namaToko' : 'Toko Cempaka',
-                            'alamat' :'Jl Kemana Aja'
-                            },{
-                            'nama' : 'beras a',
-                            'harga' : '69,000',
-                            'imgUrl' :'aa',
-                            'namaToko' : 'Toko Putri',
-                            'alamat' :'Jl Kenangan'
-                            },{
-                            'nama' : 'beras a',
-                            'harga' : '61,000',
-                            'imgUrl' :'aa',
-                            'namaToko' : 'Toko Cahaya',
-                            'alamat' :'Jl Medan Utara'
-                            }];
+    function timeout(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    const getProduct = async () => {
+        console.log("provinsiIdSelected ==>", provinsiIdSelected)
+        console.log("kotaIdSelected ==>", kotaIdSelected)
+        console.log("searchProduct ==>", searchProduct)
+        setProductLoading(true)
+
+        //TODO: this is mock timeout 
+        await timeout(300)
+        let dataProduct = [{
+            'nama': 'beras a',
+            'imgUrl': 'https://s2.bukalapak.com/product-description-image/11197/large/beras%20premium%20SR%205%20kg.png',
+            'harga': '60,000',
+            'namaToko': 'Toko Budi',
+            'alamat': 'Jl Merdeka'
+        },
+        {
+            'nama': 'beras b',
+            'harga': '59,500',
+            'imgUrl': 'https://s2.bukalapak.com/product-description-image/11197/large/beras%20premium%20SR%205%20kg.png',
+            'namaToko': 'Toko Cempaka',
+            'alamat': 'Jl Kemana Aja'
+        }, {
+            'nama': 'beras a',
+            'harga': '69,000',
+            'imgUrl': 'https://s2.bukalapak.com/product-description-image/11197/large/beras%20premium%20SR%205%20kg.png',
+            'namaToko': 'Toko Putri',
+            'alamat': 'Jl Kenangan'
+        }, {
+            'nama': 'beras a',
+            'harga': '61,000',
+            'imgUrl': 'https://s2.bukalapak.com/product-description-image/11197/large/beras%20premium%20SR%205%20kg.png',
+            'namaToko': 'Toko Cahaya',
+            'alamat': 'Jl Medan Utara'
+        }];
         setProduct(dataProduct);
+        setProductLoading(false)
+    }
+
+    const getListProvinsi = () => {
+        let res = [
+            {
+                "id": "1101",
+                "name": "KABUPATEN SIMEULUE",
+            },
+            {
+                "id": "1102",
+                "name": "KABUPATEN ACEH SINGKIL",
+            },
+            {
+                "id": "1103",
+                "name": "KABUPATEN ACEH SELATAN",
+            }]
+        setListProvinsi(res)
+    }
+
+    const getListKota = (id) => {
+        console.log("provinsiIdSelected ==>", id)
+        let res = [
+            {
+                "id": "1",
+                "name": "Medan",
+            },
+            {
+                "id": "2",
+                "name": "Padang Sidempuan",
+            },
+            {
+                "id": "33",
+                "name": "Jakarta",
+            }]
+        setListKota(res)
+    }
+
+    const onchangeProvince = (e) => {
+        setProvinsiIdSelected(e.target.value)
+        setKotaIdSelected(null)
+        setListKota([])
+        getListKota(e.target.value);
+    }
+
+    const onchangeKota = (e) => {
+        setKotaIdSelected(e.target.value)
+    }
+
+    const onSearchProudct = (e) => {
+        e.preventDefault();
+        setSearchProduct("")
+        getProduct();
+    }
+
+    const onChangeSearch = (e) => {
+        setSearchProduct(e.target.value)
     }
 
     return (
@@ -97,80 +173,75 @@ const Home = () => {
             <div className='container-fluid'>
                 <h1 className='mt-5 text-upporcase'>Panganku.id</h1>
             </div>
-            <div className='container-fluid'>      
+            <div className='container-fluid'>
                 <h5 class='text-warning'>Temukan Toko dan bahan pangan yang adanda cari di sekitarmu</h5>
                 <h5 class='text-warning'>Tambahkan Toko Anda supaya banyak di lihat orang</h5>
             </div>
-            <div class ='row mt-5 mb-4'>
-                <div class='col'/>
+            <div class='row mt-5 mb-4'>
+                <div class='col' />
                 <div class='col'>
-                    <Card>
-                        <div class="mb-2 mt-2">
-                            <Form.Select aria-label="Provinsi">
+                    <div class="mb-2 mt-2">
+                        <Form.Select aria-label="Provinsi" value={provinsiIdSelected ?? ""} onChange={onchangeProvince}>
                             <option>Provinsi</option>
-                            <option value="1">DKI Jakarta</option>
-                            <option value="2">Sumatra Utara</option>
-                            <option value="3">Three</option>
-                            </Form.Select>
-                        </div>
-                        <div class="mb-2">
-                            <Form.Select aria-label="Kota">
+                            {listProvinsi.map((e, i) => (<option value={e.id}>{e.name}</option>))}
+                        </Form.Select>
+                    </div>
+                    <div class="mb-2">
+                        <Form.Select aria-label="Kota" value={kotaIdSelected ?? ""} onChange={onchangeKota}>
                             <option>Kota</option>
-                            <option value="1">Jakarta Pusat</option>
-                            <option value="2">Jakarta Selatan</option>
-                            <option value="3">Jakarta Barat</option>
-                            </Form.Select>  
-                        </div>       
-                    </Card>                
+                            {listKota.map((e, i) => (<option value={e.id}>{e.name}</option>))}
+                        </Form.Select>
+                    </div>
                 </div>
-                <div class='col'/>
+                <div class='col' />
             </div>
             <div class="mb-5">
-                <form class="row g-3">
-                <div class="col">
-                </div>
-                <div class="col">
-                    <input type="text" class="form-control" id="inputProduk" placeholder="Masukkan Nama Produk"/>
-                </div>
-                <div class="col">
-                    <button type="submit" class="btn btn-primary mb-3">Telusuri</button>
-                </div>
+                <form class="row g-3" onSubmit={onSearchProudct}>
+                    <div class="col">
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" id="inputProduk" placeholder="Masukkan Nama Produk" onChange={onChangeSearch} value={searchProduct} />
+                    </div>
+                    <div class="col">
+                        <button type="submit" class="btn btn-primary mb-3">Telusuri</button>
+                    </div>
                 </form>
             </div>
             <div class="col-3">
                 <Card>
                     <h3>Rekomendasi Produk</h3>
-                </Card>       
-            </div>   
+                </Card>
+            </div>
             <div>
-                <Card>
-                    
+                {isProductLoading ? <div class="d-flex justify-content-center" >
+                    <div class="spinner-border m-5" role="status" />
+                </div> : <Card>
                     <Grid container>
-                    {product.map((product,index)=>(
-                        <div class ="m-3">
-                            <Card style={{ width: '15rem'}}>
-                            <Card.Img variant="top" src="https://s2.bukalapak.com/product-description-image/11197/large/beras%20premium%20SR%205%20kg.png" />
-                            <Card.Body>
-                            <Card.Title>Beras Sania 5 Kg</Card.Title>
-                            <Card.Text>
-                            Rp {product.harga}
-                            </Card.Text>
-                            <Card>         
-                            </Card>
-                            <div class="d-grid gap-2  mx-auto ">  
-                            <Card class='bg-light' >
-                                <Card.Title>{product.namaToko}</Card.Title>
-                                <Card.Text>{product.alamat},Jakarta Pusat</Card.Text>
-                            </Card>             
-                            </div>         
-                            </Card.Body>
-                            </Card>
-                        </div>            
-                    ))}
-                </Grid>
-                </Card>      
-            </div>          
-        </div>
+                        {product.map((product, index) => (
+                            <div class="m-3">
+                                <Card style={{ width: '15rem' }}>
+                                    <Card.Img variant="top" src={product.imgUrl} />
+                                    <Card.Body>
+                                        <Card.Title>{product.nama}</Card.Title>
+                                        <Card.Text>
+                                            Rp {product.harga}
+                                        </Card.Text>
+                                        <Card>
+                                        </Card>
+                                        <div class="d-grid gap-2  mx-auto ">
+                                            <Card class='bg-light' >
+                                                <Card.Title>{product.namaToko}</Card.Title>
+                                                <Card.Text>{product.alamat},Jakarta Pusat</Card.Text>
+                                            </Card>
+                                        </div>
+                                    </Card.Body>
+                                </Card>
+                            </div>
+                        ))}
+                    </Grid>
+                </Card>}
+            </div>
+        </div >
     )
 }
 

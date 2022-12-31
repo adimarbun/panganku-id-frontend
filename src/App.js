@@ -6,28 +6,38 @@ import Register from "./components/Register";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import Toko from "./components/Toko";
 import AddProduk from "./components/AddProduk";
+import AddToko from "./components/AddToko";
+import EditToko from "./components/EditToko";
 
 function App() {
   return (
     <BrowserRouter>
       <Switch>
         <Route exact path="/">
-          <Login/>
+          <Login />
         </Route>
         <Route path="/register">
-          <Register/>
+          <Register />
         </Route>
         <Route path="/home">
-          <Navbar/>
-          <Home/>
+          <Navbar />
+          <Home />
         </Route>
         <Route path="/toko">
-          <Navbar/>
-          <Toko/>
+          <Navbar />
+          <Toko />
         </Route>
         <Route path="/addProduk">
-          <Navbar/>
-          <AddProduk/>
+          <Navbar />
+          <AddProduk />
+        </Route>
+        <Route path="/editToko">
+          <Navbar />
+          <EditToko />
+        </Route>
+        <Route path="/addToko">
+          <Navbar />
+          <AddToko />
         </Route>
       </Switch>
     </BrowserRouter>
