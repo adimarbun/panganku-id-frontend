@@ -2,6 +2,7 @@ import axios from 'axios';
 import { Link, useHistory } from 'react-router-dom';
 import React, { useState, useEffect } from 'react'
 import jwt_decode from "jwt-decode";
+import { Dropdown } from 'react-bootstrap'
 
 const Navbar = () => {
     const history = useHistory();
@@ -33,7 +34,7 @@ const Navbar = () => {
         }
     }
 
-    const TokoSaya = async() =>{
+    const TokoSaya = async () => {
         history.push("toko");
     }
 
@@ -69,13 +70,20 @@ const Navbar = () => {
 
     return (
         <nav class="navbar navbar-light bg-light">
-        <div class="container-fluid">
-            <a href ="/home" class="navbar-brand">Panganku.Id</a>
-            <button class="btn btn-outline-success" onClick={TokoSaya}>Toko Saya</button>
-            <form class="d-flex">            
-                <button class="btn btn-outline-success" onClick={Logout} type="submit">Hello , {name}</button>
-            </form>
-        </div>
+            <div class="container-fluid">
+                <a href="/home" class="navbar-brand">Panganku.Id</a>
+                <div class="d-flex">
+                    <button class="btn btn-outline-success" style={{ marginRight: 20 }} onClick={TokoSaya}>Toko Saya</button>
+                    <Dropdown>
+                        <Dropdown.Toggle variant="warning" id="dropdown-basic">
+                            Hello , {name}
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            <Dropdown.Item onClick={Logout}>Keluar</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </div>
+            </div>
         </nav>
     )
 }
