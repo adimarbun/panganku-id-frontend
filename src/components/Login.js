@@ -41,7 +41,7 @@ const Login = () => {
                                 <div class="row justify-content-center">
                                     <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
                                         <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Login</p>
-                                        <p class="d-flex flex-row mx-md-4">Belum punya akun? <p class="text-primary" onClick={onHandleRegister}>&nbsp; Daftar Disini</p></p>
+                                        <p class="d-flex flex-row mx-md-4">Belum punya akun? <p style={{ cursor: "Pointer" }} class="text-primary" onClick={onHandleRegister}>&nbsp; Daftar Disini</p></p>
                                         <form class="mx-1 mx-md-4" onSubmit={Auth}>
                                             <p className="has-text-centered">{msg}</p>
                                             <div class="d-flex flex-row align-items-center mb-4">
