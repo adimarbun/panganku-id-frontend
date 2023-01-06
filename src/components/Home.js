@@ -55,6 +55,7 @@ const Home = () => {
             const decoded = jwt_decode(response.data.accessToken);
             setName(decoded.name);
             setExpire(decoded.exp);
+            window.sessionStorage.setItem("userId", decoded.userId);
         }
         return config;
     }, (error) => {
@@ -108,11 +109,19 @@ const Home = () => {
             'namaToko': 'Toko Cahaya',
             'alamat': 'Jl Medan Utara'
         }];
-        setProduct(dataProduct);
+
+        const response = await axiosJWT.get('http://localhost:5000/all-produk', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        //setProduct(dataProduct);
+        setProduct(response.data);
         setProductLoading(false)
     }
 
-    const getListProvinsi = () => {
+    const getListProvinsi = async() => {
         let res = [
             {
                 "id": "1101",
@@ -126,25 +135,24 @@ const Home = () => {
                 "id": "1103",
                 "name": "KABUPATEN ACEH SELATAN",
             }]
-        setListProvinsi(res)
+
+        const response = await axiosJWT.get('http://localhost:5000/provinces', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        setListProvinsi(response.data)
     }
 
-    const getListKota = (id) => {
+    const getListKota = async(id) => {
         console.log("provinsiIdSelected ==>", id)
-        let res = [
-            {
-                "id": "1",
-                "name": "Medan",
-            },
-            {
-                "id": "2",
-                "name": "Padang Sidempuan",
-            },
-            {
-                "id": "33",
-                "name": "Jakarta",
-            }]
-        setListKota(res)
+    
+        const response = await axiosJWT.get(`http://localhost:5000/kota/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        setListKota(response.data)
     }
 
     const onchangeProvince = (e) => {
@@ -220,18 +228,18 @@ const Home = () => {
                         {product.map((product, index) => (
                             <div class="m-3">
                                 <Card style={{ width: '15rem' }}>
-                                    <Card.Img variant="top" src={product.imgUrl} />
+                                    <Card.Img variant="top" src={product.img_produk} />
                                     <Card.Body>
-                                        <Card.Title>{product.nama}</Card.Title>
+                                        <Card.Title>{product.nama_produk}</Card.Title>
                                         <Card.Text>
-                                            Rp {product.harga}
+                                            Rp {product.harga_produk}
                                         </Card.Text>
                                         <Card>
                                         </Card>
                                         <div class="d-grid gap-2  mx-auto ">
                                             <Card class='bg-light' >
-                                                <Card.Title>{product.namaToko}</Card.Title>
-                                                <Card.Text>{product.alamat},Jakarta Pusat</Card.Text>
+                                                <Card.Title>{product.toko.nama_toko}</Card.Title>
+                                                <Card.Text>{product.toko.alamat},{product.toko.kotum.name},{product.toko.province.name}</Card.Text>
                                             </Card>
                                         </div>
                                     </Card.Body>

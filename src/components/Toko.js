@@ -71,36 +71,31 @@ const Toko = () => {
             'harga': '60,000',
             'namaToko': 'Toko Budi',
             'alamat': 'Jl Merdeka'
-        },
-        {
-            'nama': 'Beras Sentra',
-            'harga': '59,500',
-            'imgUrl': 'https://s2.bukalapak.com/product-description-image/11197/large/beras%20premium%20SR%205%20kg.png',
-            'namaToko': 'Toko Cempaka',
-            'alamat': 'Jl Kemana Aja'
-        }, {
-            'nama': 'saus tomat sam hap botol plastik 630ml yolins aneka bahan pangan',
-            'harga': '17.200',
-            'imgUrl': 'https://images.tokopedia.net/img/cache/100-square/product-1/2021/8/4/7620065/7620065_a7b85d40-3a64-4241-9ff5-405a5851dc40.jpeg.webp?ect=4g',
-            'namaToko': 'Toko Putri',
-            'alamat': 'Jl Kenangan'
-        }, {
-            'nama': 'Hamer Perisa Susu 500 gram Bahan Tambahan Pangan BTP',
-            'harga': '108.000',
-            'imgUrl': 'https://images.tokopedia.net/img/cache/100-square/product-1/2020/5/3/99493096/99493096_e7a5a565-1d13-4e45-bd56-019fa88d8446_2048_2048.webp?ect=4g',
-            'namaToko': 'Toko Cahaya',
-            'alamat': 'Jl Medan Utara'
         }];
-        setProduct(dataProduct);
+
+        var tokoId = window.sessionStorage.getItem("tokoId");
+        const res = await axiosJWT.get(`http://localhost:5000/produk/by-toko/${tokoId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        setProduct(res.data);
     }
 
-    const getMyToko = () => {
-        let res = {
-            name: "Toko Cempaka",
-            address: "Jln. Kenangan , Cempaka Putih , Jakarta Pusat",
-            phone: "081212121221",
-        }
-        setMyToko(res)
+    const getMyToko = async() => {
+        var userId = window.sessionStorage.getItem("userId");
+        console.log(userId);
+        const res = await axiosJWT.get(`http://localhost:5000/toko/${userId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        if(res.data){
+            setMyToko(res.data)
+            window.sessionStorage.setItem("tokoId", res.data.id);
+        }   
     }
 
     const onCLickEditToko = () => {
@@ -126,9 +121,9 @@ const Toko = () => {
                 <div class="col">
                     <Card>
                         <div className='container-fluid bg-light'>
-                            <h3 className=' mt-5 text-upporcase'>{myToko.name}</h3>
-                            <p>{myToko.address}</p>
-                            <p>{myToko.phone}</p>
+                            <h3 className=' mt-5 text-upporcase'>{myToko.nama_toko}</h3>
+                            <p>{myToko.alamat}</p>
+                            <p>{myToko.no_hp}</p>
                         </div>
                         <Button variant='warning' onClick={onCLickEditToko}>Edit</Button>
                     </Card>
@@ -152,11 +147,11 @@ const Toko = () => {
                         {product.map((product, index) => (
                             <div class="m-3">
                                 <Card style={{ width: '15rem' }}>
-                                    <Card.Img variant="top" src={product.imgUrl} />
+                                    <Card.Img variant="top" src={product.img_produk} />
                                     <Card.Body>
-                                        <Card.Title>{product.nama}</Card.Title>
+                                        <Card.Title>{product.nama_produk}</Card.Title>
                                         <Card.Text>
-                                            Rp {product.harga}
+                                            Rp {product.harga_produk}
                                         </Card.Text>
                                         <Card>
                                         </Card>
