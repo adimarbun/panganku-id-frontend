@@ -1,18 +1,37 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react'
 import Card from 'react-bootstrap/Card';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
-const AddProduk = () => {
+const EditProduk = () => {
 
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [harga, setHarga] = useState('');
     const [stok, setStok] = useState('');
     const [file, setFile] = useState('');
+    const [produk,setProduk] = useState('');
+    let {id} = useParams();
 
     const history = useHistory();
 
+    useEffect(async() => {
+        console.log("vvvvv",id);  
+        await getProduk();  
+    }, []);
+
+    const axiosJWT = axios.create();
+
+    const getProduk = async (e) =>{
+        const res = await axios.get(`http://localhost:5000/produk/${id}`, {
+        });
+        console.log("ress",res.data);
+        setProduk(res.data);
+        setName(res.data.nama_produk);
+        setDescription(res.data.deskripsi_produk);
+        setHarga(res.data.harga_produk);
+        setStok(res.data.stok);
+    }
 
     const onClickSaveProduct = async (e) => {
         e.preventDefault()
@@ -20,14 +39,14 @@ const AddProduk = () => {
         var tokoId = window.sessionStorage.getItem("tokoId");
         const formData = new FormData();
         console.log("file ====>", file)
-        formData.append("file", file);
+        formData.append("id", id);
         formData.append("nama_produk", name);
         formData.append("deskripsi_produk", description);
         formData.append("harga_produk", harga);
         formData.append("stok", stok);
         formData.append("toko_id", tokoId);
         try {
-          await axios.post("http://localhost:5000/produk", formData, {
+          await axios.put("http://localhost:5000/produk", formData, {
             headers: {
               "Content-type": "multipart/form-data",
             },
@@ -62,7 +81,6 @@ const AddProduk = () => {
     const loadImage = (e) => {
         const image = e.target.files[0];
         setFile(image);
-        //setPreview(URL.createObjectURL(image));
       };
 
 
@@ -70,7 +88,7 @@ const AddProduk = () => {
         <div class="container">
             <form onSubmit={onClickSaveProduct}>
                 <Card>
-                    <h5 className='text-center my-3 text-upporcase'>Tambahkan Produk</h5>
+                    <h5 className='text-center my-3 text-upporcase'>Edit Produk</h5>
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="inputGroup-sizing-default">Nama</span>
                         <input required value={name} onChange={onChangeName} type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
@@ -87,10 +105,10 @@ const AddProduk = () => {
                         <span class="input-group-text" id="inputGroup-sizing-default">Jumlah Stok</span>
                         <input required value={stok} onChange={onChangeStok} type="number" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
                     </div>
-                    <div class="input-group mb-3">
+                    {/* <div class="input-group mb-3">
                         <input type="file" class="form-control" id="inputGroupFile02"  onChange={loadImage} />
                         <label class="input-group-text" for="inputGroupFile02">Upload Gambar</label>
-                    </div>
+                    </div> */}
                     <div class='row'>
                         <div class='col' />
                         <div class="d-grid gap-2 col-4 mx-auto my-2">
@@ -103,4 +121,4 @@ const AddProduk = () => {
         </div>
     )
 }
-export default AddProduk
+export default EditProduk;

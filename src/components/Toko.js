@@ -17,11 +17,12 @@ const Toko = () => {
     const [product, setProduct] = useState([]);
     const [myToko, setMyToko] = useState(null);
 
-    useEffect(() => {
-        refreshToken();
-        getUsers();
-        getProduct();
-        getMyToko()
+    useEffect(async() => {
+        await refreshToken();
+        await getUsers();
+        await getMyToko();
+        await getProduct();
+        
     }, []);
 
     const refreshToken = async () => {
@@ -102,6 +103,16 @@ const Toko = () => {
         history.push('/editToko')
     }
 
+    const onCLickEditProduk = (e) => {
+        history.push(`/editProduk/${e}`)
+    }
+
+    const onCLickDeleteProduk = async(id) => {
+        await axios.delete(`http://localhost:5000/produk/${id}`);
+          
+        await getProduct();
+    }
+
 
     if (myToko == null) return (
         <div className="container ">
@@ -121,9 +132,10 @@ const Toko = () => {
                 <div class="col">
                     <Card>
                         <div className='container-fluid bg-light'>
-                            <h3 className=' mt-5 text-upporcase'>{myToko.nama_toko}</h3>
-                            <p>{myToko.alamat}</p>
-                            <p>{myToko.no_hp}</p>
+                            <h3 className=' mt-5 text-upporcase'>{myToko.nama_toko}</h3>                            
+                            <p>{myToko.alamat}<br/></p>
+                            <p>{myToko.kotum.name}<br/>{myToko.province.name}</p>                  
+                            <p>No Hp : {myToko.no_hp}</p>
                         </div>
                         <Button variant='warning' onClick={onCLickEditToko}>Edit</Button>
                     </Card>
@@ -146,16 +158,30 @@ const Toko = () => {
                     <Grid container>
                         {product.map((product, index) => (
                             <div class="m-3">
+                                
                                 <Card style={{ width: '15rem' }}>
-                                    <Card.Img variant="top" src={product.img_produk} />
+                                    <Card.Img variant="top" height={250} src={product.img_produk} />
                                     <Card.Body>
                                         <Card.Title>{product.nama_produk}</Card.Title>
+                                        <Card.Text>
+                                            {product.deskripsi_produk}
+                                        </Card.Text>
                                         <Card.Text>
                                             Rp {product.harga_produk}
                                         </Card.Text>
                                         <Card>
                                         </Card>
+                                        <Card className='bg-secondary text-white'>Stok : {product.stok}</Card>
                                     </Card.Body>
+                                    <div class="row">
+                                        <div class="col">
+                                            <Button variant='warning' onClick={() => onCLickEditProduk(product.id) }>Edit</Button>
+                                        </div>
+                                        <div class="col-8">
+                                            <Button variant='danger' onClick={() => onCLickDeleteProduk(product.id) }>Delete</Button>
+                                        </div>
+                                    </div>
+                                    
                                 </Card>
                             </div>
                         ))}

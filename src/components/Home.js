@@ -77,7 +77,6 @@ const Home = () => {
 
     const getProduct = async () => {
         setProductLoading(true)
-
         if(kotaIdSelected){
             const response = await axiosJWT.get(`http://localhost:5000/produk/${provinsiIdSelected}/${kotaIdSelected}?produk=${searchProduct}`, {
             headers: {
@@ -128,7 +127,6 @@ const Home = () => {
 
     const onSearchProudct = (e) => {
         e.preventDefault();
-        setSearchProduct("")
         getProduct();
     }
 
@@ -187,22 +185,26 @@ const Home = () => {
                     <Grid container>
                         {product.map((product, index) => (
                             <div class="m-3">
-                                <Card style={{ width: '15rem' }}>
-                                    <Card.Img variant="top" src={product.img_produk} />
+                                <Card style={{ width: '15rem'  }}>
+                                    <Card.Img variant="top" height={250} src={product.img_produk} />
+                                    <Card className='bg-info text-white font-weight-bold'>Rp . {product.harga_produk}</Card>
                                     <Card.Body>
                                         <Card.Title>{product.nama_produk}</Card.Title>
                                         <Card.Text>
-                                            Rp {product.harga_produk}
+                                            {product.deskripsi_produk}
                                         </Card.Text>
                                         <Card>
                                         </Card>
                                         <div class="d-grid gap-2  mx-auto ">
-                                            <Card class='bg-light' >
+                                            <Card class='bg-primary' >
                                                 <Card.Title>{product.toko.nama_toko}</Card.Title>
-                                                <Card.Text>{product.toko.alamat},{product.toko.kotum.name},{product.toko.province.name}</Card.Text>
+                                                <Card.Text>
+                                                    <p>{product.toko.alamat}<br/>{product.toko.kotum.name}<br/>{product.toko.province.name}</p>
+                                                </Card.Text>
                                             </Card>
                                         </div>
-                                    </Card.Body>
+                                        <Card className='bg-secondary text-white'>Stok : {product.stok}</Card>
+                                    </Card.Body>                                  
                                 </Card>
                             </div>
                         ))}

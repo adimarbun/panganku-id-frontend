@@ -8,6 +8,7 @@ import Toko from "./components/Toko";
 import AddProduk from "./components/AddProduk";
 import AddToko from "./components/AddToko";
 import EditToko from "./components/EditToko";
+import EditProduk from "./components/EditProduk";
 
 function App() {
   return (
@@ -30,6 +31,10 @@ function App() {
         <Route path="/addProduk">
           <Navbar />
           <AddProduk />
+        </Route>
+        <Route path="/editProduk/:id">
+          <Navbar />
+          <EditProduk />
         </Route>
         <Route path="/editToko">
           <Navbar />
