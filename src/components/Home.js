@@ -76,66 +76,28 @@ const Home = () => {
     }
 
     const getProduct = async () => {
-        console.log("provinsiIdSelected ==>", provinsiIdSelected)
-        console.log("kotaIdSelected ==>", kotaIdSelected)
-        console.log("searchProduct ==>", searchProduct)
         setProductLoading(true)
 
-        //TODO: this is mock timeout 
-        await timeout(300)
-        let dataProduct = [{
-            'nama': 'beras a',
-            'imgUrl': 'https://s2.bukalapak.com/product-description-image/11197/large/beras%20premium%20SR%205%20kg.png',
-            'harga': '60,000',
-            'namaToko': 'Toko Budi',
-            'alamat': 'Jl Merdeka'
-        },
-        {
-            'nama': 'beras b',
-            'harga': '59,500',
-            'imgUrl': 'https://s2.bukalapak.com/product-description-image/11197/large/beras%20premium%20SR%205%20kg.png',
-            'namaToko': 'Toko Cempaka',
-            'alamat': 'Jl Kemana Aja'
-        }, {
-            'nama': 'beras a',
-            'harga': '69,000',
-            'imgUrl': 'https://s2.bukalapak.com/product-description-image/11197/large/beras%20premium%20SR%205%20kg.png',
-            'namaToko': 'Toko Putri',
-            'alamat': 'Jl Kenangan'
-        }, {
-            'nama': 'beras a',
-            'harga': '61,000',
-            'imgUrl': 'https://s2.bukalapak.com/product-description-image/11197/large/beras%20premium%20SR%205%20kg.png',
-            'namaToko': 'Toko Cahaya',
-            'alamat': 'Jl Medan Utara'
-        }];
-
-        const response = await axiosJWT.get('http://localhost:5000/all-produk', {
+        if(kotaIdSelected){
+            const response = await axiosJWT.get(`http://localhost:5000/produk/${provinsiIdSelected}/${kotaIdSelected}?produk=${searchProduct}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
-        });
-
-        //setProduct(dataProduct);
-        setProduct(response.data);
-        setProductLoading(false)
+            });
+            setProduct(response.data);
+            setProductLoading(false)
+        }else{
+            const response = await axiosJWT.get(`http://localhost:5000/all-produk`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            });
+            setProduct(response.data);
+            setProductLoading(false)
+        }      
     }
 
     const getListProvinsi = async() => {
-        let res = [
-            {
-                "id": "1101",
-                "name": "KABUPATEN SIMEULUE",
-            },
-            {
-                "id": "1102",
-                "name": "KABUPATEN ACEH SINGKIL",
-            },
-            {
-                "id": "1103",
-                "name": "KABUPATEN ACEH SELATAN",
-            }]
-
         const response = await axiosJWT.get('http://localhost:5000/provinces', {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -145,8 +107,6 @@ const Home = () => {
     }
 
     const getListKota = async(id) => {
-        console.log("provinsiIdSelected ==>", id)
-    
         const response = await axiosJWT.get(`http://localhost:5000/kota/${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`
