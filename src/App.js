@@ -36,7 +36,7 @@ function App() {
           <Navbar />
           <EditProduk />
         </Route>
-        <Route path="/editToko">
+        <Route path="/editToko/:id">
           <Navbar />
           <EditToko />
         </Route>

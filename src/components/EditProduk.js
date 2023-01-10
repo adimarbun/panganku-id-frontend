@@ -16,7 +16,6 @@ const EditProduk = () => {
     const history = useHistory();
 
     useEffect(async() => {
-        console.log("vvvvv",id);  
         await getProduk();  
     }, []);
 

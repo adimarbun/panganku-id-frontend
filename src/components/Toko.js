@@ -99,8 +99,8 @@ const Toko = () => {
         }   
     }
 
-    const onCLickEditToko = () => {
-        history.push('/editToko')
+    const onCLickEditToko = (id) => {
+        history.push(`/editToko/${id}`)
     }
 
     const onCLickEditProduk = (e) => {
@@ -137,7 +137,7 @@ const Toko = () => {
                             <p>{myToko.kotum.name}<br/>{myToko.province.name}</p>                  
                             <p>No Hp : {myToko.no_hp}</p>
                         </div>
-                        <Button variant='warning' onClick={onCLickEditToko}>Edit</Button>
+                        <Button variant='warning' onClick={() => onCLickEditToko(myToko.id) }>Edit</Button>
                     </Card>
                 </div>
                 <div class="col">
