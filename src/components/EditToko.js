@@ -108,7 +108,7 @@ const EditToko = () => {
         <div class="container">
             <form onSubmit={onClickSaveToko}>
                 <Card>
-                    <h5 className='text-center my-3 text-upporcase'>Tambahkan Toko</h5>
+                    <h5 className='text-center my-3 text-upporcase'>Edit Toko Saya</h5>
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="inputGroup-sizing-default">Nama Toko</span>
                         <input required value={nameToko} onChange={onChangeNameToko} type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
